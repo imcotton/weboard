@@ -9,6 +9,8 @@ exports.init = ($http) ->
     rooms = {}
 
     io.sockets.on 'connection', ($socket) ->
+
+        $socket.emit 'chat', 'hello'
         
         $socket.once 'host', ($fn) ->
             @room = "room#{@id}"
