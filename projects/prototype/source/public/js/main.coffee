@@ -1,6 +1,8 @@
 
 $ ->
 
+    return
+    
     service = new Service
 
     service.connect().done ->
