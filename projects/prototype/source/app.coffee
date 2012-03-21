@@ -1,6 +1,10 @@
 express = require 'express'
 socket = require './socket'
 
+express.static.mime.define
+    'text/plain': ['coffee']
+
+
 app = module.exports = express.createServer();
 
 socket.init app
@@ -10,6 +14,7 @@ socket.init app
 app.configure ->
     app.use express.bodyParser()
     app.use express.methodOverride()
+    app.use app.router
     app.use express.static "#{__dirname}/public"
 
 app.configure 'development', ->
