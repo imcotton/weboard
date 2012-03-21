@@ -5,15 +5,13 @@ class Service
         _.extend @, Backbone.Events
 
 
-    sessionid: => @sio?.socket?.sessionid
-
-
     connect: ->
         defer = $.Deferred();
 
         @sio = io.connect()
 
             .on 'connect', =>
+                @sid = @sio.socket.sessionid
                 defer.resolveWith @
 
             .on 'chat', =>
@@ -28,7 +26,9 @@ class Service
     host: ->
         defer = $.Deferred();
 
-        @sio.emit 'host', defer.resolve
+        @sio.emit 'host', ($room) =>
+            @room = $room
+            defer.resolveWith @, [$room]
 
         defer.promise()
 
