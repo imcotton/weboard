@@ -1,8 +1,7 @@
 express = require 'express'
 socket = require './socket'
 
-express.static.mime.define
-    'text/plain': ['coffee']
+express.static.mime.load './mime.types'
 
 
 app = module.exports = express.createServer();
