@@ -26,7 +26,7 @@ $ ->
                 info = $('.host-info.tmpl').clone().removeClass 'tmpl'
                 info.find('a').attr href: url
                 info.find('.link').text url
-                info.find('pre').text $room + $room
+                info.find('pre').text $room
                 info.appendTo landing
 
 

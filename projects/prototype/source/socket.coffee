@@ -7,20 +7,22 @@ exports.init = ($http) ->
     io.set 'log level', 2
 
     rooms = {}
+    roomPefix = 'room-'
 
     io.sockets.on 'connection', ($socket) ->
 
         $socket.emit 'chat', 'hello'
         
         $socket.once 'host', ($fn) ->
-            @room = "room#{@id}"
+            @room = "#{roomPefix}#{@id}"
             rooms[@room] = true
             this.join @room
-            $fn @room
+            $fn @id
 
         $socket.once 'knock', ($room, $fn) ->
-            if $room of rooms
-                @room = $room
+            room = "#{roomPefix}#{$room}"
+            if room of rooms
+                @room = room
                 this.join @room
                 this.broadcast.to(@room).emit 'room-io', true, @id
                 $fn true
