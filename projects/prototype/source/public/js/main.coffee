@@ -23,11 +23,11 @@ $ ->
         service.connect().done ->
             @host().done ($room) ->
                 url = "#{location.href}##{$room}"
-                info = $('.host-info.tmpl').clone().removeClass 'tmpl'
-                info.find('a').attr href: url
-                info.find('.link').text url
-                info.find('pre').text $room
-                info.appendTo landing
+                info = $('.info-bar.tmpl').clone().removeClass 'tmpl'
+                info.find('.qrimg').attr href: url
+                info.find('.info-block pre').text $room
+                info.find('.info-block a').text(url).attr href: url
+                info.prependTo 'body'
 
 
 
