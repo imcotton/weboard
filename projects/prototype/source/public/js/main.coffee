@@ -31,6 +31,11 @@ $ ->
                 info.find('.info-block a').text(url).attr href: url
                 info.prependTo 'body'
 
+                $('<img>', src: utils.getQRCodeImg(url)).one 'load', ->
+                    info.find('.qrimg img').replaceWith @
+
+                landing.remove()
+
 
 
 
