@@ -14,7 +14,7 @@ $ ->
 
     $('a').click -> false
 
-    tmpl = $ $('script[type="text/tmpl"]').text()
+    tmpl = $ $('script[type="text/tmpl"]').html()
 
     main = $('#main')
     landing = main.find '.landing'
