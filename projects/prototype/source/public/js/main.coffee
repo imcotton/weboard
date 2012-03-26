@@ -14,6 +14,8 @@ $ ->
 
     $('a').click -> false
 
+    tmpl = $ $('script[type="text/tmpl"]').text()
+
     main = $('#main')
     landing = main.find '.landing'
 
@@ -23,7 +25,7 @@ $ ->
         service.connect().done ->
             @host().done ($room) ->
                 url = "#{location.href}##{$room}"
-                info = $('.info-bar.tmpl').clone().removeClass 'tmpl'
+                info = tmpl.find('.info-bar').clone()
                 info.find('.qrimg').attr href: url
                 info.find('.info-block pre').text $room
                 info.find('.info-block a').text(url).attr href: url
