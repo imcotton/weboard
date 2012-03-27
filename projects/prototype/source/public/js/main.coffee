@@ -12,7 +12,8 @@ $ ->
 
 
 
-    $('a').click -> false
+    $('a[href="#"]').click -> false
+
 
     tmpl = $ $('script[type="text/tmpl"]').html()
 
@@ -31,9 +32,14 @@ $ ->
                 info.find('.info-block a').text(url).attr href: url
                 info.prependTo 'body'
 
+                bodyPadding = ->
+                    $('body').css 'padding-top', info.height() + 20;
+
                 $('<img>', src: utils.getQRCodeImg(url)).one 'load', ->
                     info.find('.qrimg img').replaceWith @
+                    bodyPadding()
 
+                bodyPadding()
                 landing.remove()
 
 
