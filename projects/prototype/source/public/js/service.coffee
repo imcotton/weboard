@@ -36,8 +36,8 @@ class Service
     guest: ($room) ->
         defer = $.Deferred();
 
-        @sio.emit 'knock', $room, ($hasJoin) ->
-            if $hasJoin then defer.resolve()
+        @sio.emit 'knock', $room, ($roomAuth) ->
+            if $roomAuth then defer.resolveWith @, [$roomAuth]
             else defer.reject()
 
         defer.promise()

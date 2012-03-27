@@ -20,7 +20,7 @@ $ ->
     main = $('#main')
     landing = main.find '.landing'
 
-    landing.find('.host').click ->
+    landing.find('.default > .host').click ->
         landing.find('a').addClass 'disabled'
 
         service.connect().done ->
@@ -43,6 +43,20 @@ $ ->
                 landing.remove()
 
 
+    landing.find('.default > .guest').click ->
+        landing.find('.default').hide()
+        landing.find('.guesting').show()
+
+
+    landing.find('.guesting a.join').click ->
+        service.connect().done ->
+            @guest(landing.find('.guesting .text').val()).done ($room) ->
+                console.log "joined #{$room}"
+
+
+    landing.find('.guesting > .cancel').click ->
+        landing.find('.default').show()
+        landing.find('.guesting').hide()
 
 
 

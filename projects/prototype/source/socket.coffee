@@ -25,7 +25,7 @@ exports.init = ($http) ->
                 @room = room
                 this.join @room
                 this.broadcast.to(@room).emit 'room-io', true, @id
-                $fn true
+                $fn $room
             else
                 $fn false
 
