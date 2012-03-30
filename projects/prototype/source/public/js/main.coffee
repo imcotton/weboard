@@ -1,62 +1,62 @@
 
+service = new Service
+
+service
+    .on 'sio:chat', ->
+        console.log arguments
+
+    .on 'sio:room-io', ->
+        console.log arguments
+
+
 $ ->
 
-    service = new Service
+    class Landing extends Backbone.View
 
-    service
-        .on 'sio:chat', ->
-            console.log arguments
+        el: $ '#main .landing'
 
-        .on 'sio:room-io', ->
-            console.log arguments
+        clickHost: ->
+            _this = @;
+            @$el.find('a').addClass 'disabled'
 
+            service.connect().done ->
+                @host().done ($room) ->
+                    url = "#{location.href}##{$room}"
+                
+                    info = $ Tmpl.info_bar
+                        url: url
+                        room: $room
 
+                    info.prependTo 'body'
 
-    $('a[href="#"]').click -> false
+                    $('<img>', src: utils.getQRCodeImg(url)).one 'load', ->
+                        info.find('.qrimg img').replaceWith @
+                        $('body').css 'padding-top', info.height() + 20;
 
+                    _this.$el.remove()
 
-    tmpl = $ $('script[type="text/tmpl"]').html()
+        clickGuest: ->
+            @$el.find('.default').hide()
+            @$el.find('.guesting').show()
 
-    main = $('#main')
-    landing = main.find '.landing'
+        clickCancel: ->
+            @$el.find('.default').show()
+            @$el.find('.guesting').hide()
 
-    landing.find('.default > .host').click ->
-        landing.find('a').addClass 'disabled'
+        clickJoin: ->
+            _this = @;
+            service.connect().done ->
+                @guest(_this.$el.find('.guesting .text').val()).done ($room) ->
+                    console.log "joined #{$room}"
 
-        service.connect().done ->
-            @host().done ($room) ->
-                url = "#{location.href}##{$room}"
-                info = tmpl.find('.info-bar').clone()
-                info.find('.qrimg').attr href: url
-                info.find('.info-block pre').text $room
-                info.find('.info-block a').text(url).attr href: url
-                info.prependTo 'body'
+        events:
+            'click .default > .host': 'clickHost'
+            'click .default > .guest': 'clickGuest'
 
-                bodyPadding = ->
-                    $('body').css 'padding-top', info.height() + 20;
-
-                $('<img>', src: utils.getQRCodeImg(url)).one 'load', ->
-                    info.find('.qrimg img').replaceWith @
-                    bodyPadding()
-
-                bodyPadding()
-                landing.remove()
-
-
-    landing.find('.default > .guest').click ->
-        landing.find('.default').hide()
-        landing.find('.guesting').show()
-
-
-    landing.find('.guesting a.join').click ->
-        service.connect().done ->
-            @guest(landing.find('.guesting .text').val()).done ($room) ->
-                console.log "joined #{$room}"
+            'click .guesting a.join': 'clickJoin'
+            'click .guesting > .cancel': 'clickCancel'
 
 
-    landing.find('.guesting > .cancel').click ->
-        landing.find('.default').show()
-        landing.find('.guesting').hide()
-
+    landing = new Landing
 
 
