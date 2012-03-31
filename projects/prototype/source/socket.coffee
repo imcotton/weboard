@@ -19,7 +19,7 @@ exports.init = ($http) ->
             this.join @room
             $fn @id
 
-        $socket.once 'knock', ($room, $fn) ->
+        $socket.on 'knock', ($room, $fn) ->
             room = "#{roomPefix}#{$room}"
             if room of rooms
                 @room = room

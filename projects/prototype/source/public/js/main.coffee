@@ -15,39 +15,50 @@ $ ->
 
         el: $ '#main .landing'
 
+        onLogin: ($room) =>
+            {origin, pathname} = location
+            url = "#{origin + pathname}##{$room}"
+        
+            info = $ Tmpl.info_bar
+                url: url
+                room: $room
+
+            info.prependTo 'body'
+
+            $('<img>', src: utils.getQRCodeImg(url)).one 'load', ->
+                info.find('.qrimg img').replaceWith @
+                $('body').css 'padding-top', info.height() + 20;
+
+            @$el.remove()
+
         clickHost: ->
-            _this = @;
             @$el.find('a').addClass 'disabled'
 
-            service.connect().done ->
-                @host().done ($room) ->
-                    url = "#{location.href}##{$room}"
-                
-                    info = $ Tmpl.info_bar
-                        url: url
-                        room: $room
-
-                    info.prependTo 'body'
-
-                    $('<img>', src: utils.getQRCodeImg(url)).one 'load', ->
-                        info.find('.qrimg img').replaceWith @
-                        $('body').css 'padding-top', info.height() + 20;
-
-                    _this.$el.remove()
+            service.host().done @onLogin
 
         clickGuest: ->
             @$el.find('.default').hide()
             @$el.find('.guesting').show()
 
+            @$el.find('.guesting > .form > input').focus()
+
         clickCancel: ->
             @$el.find('.default').show()
             @$el.find('.guesting').hide()
 
+            @$el.find('.guesting > .form').removeClass('error')
+                .find('input').val ''
+
         clickJoin: ->
-            _this = @;
-            service.connect().done ->
-                @guest(_this.$el.find('.guesting .text').val()).done ($room) ->
-                    console.log "joined #{$room}"
+            room = @$el.find('.guesting .text').val()
+            return if !room
+
+            service.guest(room)
+                .done(@onLogin)
+                .fail =>
+                    @$el.find('.guesting > .form')
+                        .addClass('error')
+                        .find('input').select()
 
         events:
             'click .default > .host': 'clickHost'

@@ -5,7 +5,35 @@ class Service
         _.extend @, Backbone.Events
 
 
-    connect: ->
+    host: ->
+        defer = $.Deferred();
+
+        beHost = ->
+            @sio.emit 'host', ($room) =>
+                @room = $room
+                defer.resolveWith @, [$room]
+
+        if @sid then beHost.call @
+        else @_connect().done beHost
+
+        defer.promise()
+
+
+    guest: ($room) ->
+        defer = $.Deferred();
+
+        beGuest = ->
+            @sio.emit 'knock', $room, ($roomAuth) ->
+                if $roomAuth then defer.resolveWith @, [$roomAuth]
+                else defer.reject()
+
+        if @sid then beGuest.call @
+        else @_connect().done beGuest
+
+        defer.promise()
+
+
+    _connect: ->
         defer = $.Deferred();
 
         @sio = io.connect()
@@ -19,26 +47,6 @@ class Service
 
             .on 'room-io', =>
                 @trigger 'sio:room-io', arguments...
-
-        defer.promise()
-
-
-    host: ->
-        defer = $.Deferred();
-
-        @sio.emit 'host', ($room) =>
-            @room = $room
-            defer.resolveWith @, [$room]
-
-        defer.promise()
-
-
-    guest: ($room) ->
-        defer = $.Deferred();
-
-        @sio.emit 'knock', $room, ($roomAuth) ->
-            if $roomAuth then defer.resolveWith @, [$roomAuth]
-            else defer.reject()
 
         defer.promise()
 
