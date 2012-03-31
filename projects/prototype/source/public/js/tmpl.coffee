@@ -12,7 +12,7 @@ window.Tmpl = class
                     </a>
                     <div class="info-block pull-left">
                         <pre><%= room %></pre>
-                        <a href="<%= url %>" target="_blank"><%= room %></a>
+                        <a href="<%= url %>" target="_blank"><%= url %></a>
                     </div>
                 </div>
 
