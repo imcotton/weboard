@@ -32,8 +32,7 @@ $ ->
             @$el.remove()
 
         clickHost: ->
-            @$el.find('a').addClass 'disabled'
-
+            @$el.find('.default > button').attr 'disabled', 'disabled'
             service.host().done @onLogin
 
         clickGuest: ->
@@ -46,16 +45,20 @@ $ ->
             @$el.find('.default').show()
             @$el.find('.guesting').hide()
 
-            @$el.find('.guesting > .form').removeClass('error')
-                .find('input').val ''
+            form = @$el.find('.guesting > .form').removeClass('error')
+            form.find('input').val ''
+            form.find('button.join').removeAttr 'disabled'
 
-        clickJoin: ->
+        clickJoin: ($event) ->
             room = @$el.find('.guesting .text').val()
             return if !room
+
+            a = $($event.target).attr 'disabled', 'disabled'
 
             service.guest(room)
                 .done(@onLogin)
                 .fail =>
+                    a.removeAttr 'disabled'
                     @$el.find('.guesting > .form')
                         .addClass('error')
                         .find('input').select()
@@ -64,7 +67,7 @@ $ ->
             'click .default > .host': 'clickHost'
             'click .default > .guest': 'clickGuest'
 
-            'click .guesting a.join': 'clickJoin'
+            'click .guesting button.join': 'clickJoin'
             'click .guesting > .cancel': 'clickCancel'
 
 
