@@ -15,9 +15,15 @@ $ ->
 
         el: $ '#main .landing'
 
+        checkHash: ->
+            if hash = window.location.hash?[1..]
+                @$el.find('.default > button.guest').click()
+                @$el.find('.guesting input').val hash
+                @$el.find('.guesting button.join').click()
+
         onLogin: ($room) =>
-            {origin, pathname} = location
-            url = "#{origin + pathname}##{$room}"
+            {href, hash} = window.location
+            url = href.replace(hash, '') + "##{$room}"
         
             info = $ Tmpl.info_bar
                 url: url
@@ -70,7 +76,7 @@ $ ->
             'click .guesting button.join': 'clickJoin'
             'click .guesting > .cancel': 'clickCancel'
 
-
     landing = new Landing
+    landing.checkHash()
 
 
