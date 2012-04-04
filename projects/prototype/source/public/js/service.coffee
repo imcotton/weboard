@@ -33,6 +33,10 @@ class Service
         defer.promise()
 
 
+    chat: ($msg) ->
+        @sio.emit 'chat', $msg
+
+
     _connect: ->
         defer = $.Deferred();
 

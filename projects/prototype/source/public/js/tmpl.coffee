@@ -19,3 +19,17 @@ window.Tmpl = class
             </div>
           </div>
         </div>'
+
+    @typing_bar = _.template.call @,
+        '<div class="typing-bar navbar navbar-fixed-bottom">
+          <div class="navbar-inner">
+            <div class="container">
+
+                <div class="form form-horizontal">
+                    <textarea class="text input-xlarge" rows="2"></textarea>
+                    <button class="join btn btn-primary">Send</button>
+                </div>
+
+            </div>
+          </div>
+        </div>'

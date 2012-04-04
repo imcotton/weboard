@@ -1,14 +1,6 @@
 
 service = new Service
 
-service
-    .on 'sio:chat', ->
-        console.log arguments
-
-    .on 'sio:room-io', ->
-        console.log arguments
-
-
 $ ->
 
     class Landing extends Backbone.View
@@ -36,6 +28,8 @@ $ ->
                 $('body').css 'padding-top', info.height() + 20;
 
             @$el.remove()
+
+            new Typing().$el.appendTo 'body'
 
         clickHost: ->
             @$el.find('.default > button').attr 'disabled', 'disabled'
@@ -76,7 +70,54 @@ $ ->
             'click .guesting button.join': 'clickJoin'
             'click .guesting > .cancel': 'clickCancel'
 
+
+    class Typing extends Backbone.View
+
+        initialize: ->
+            @setElement $ Tmpl.typing_bar()
+
+
+    class ItemListView extends Backbone.View
+
+        el: $ '#main'
+
+        initialize: ->
+            @model.on 'add', @onAdded
+
+        onAdded: ($item) =>
+            $("<div>#{$item.get('text')}</div>").appendTo @$el
+
+
+
+    class ItemModel extends Backbone.Model
+
+        defaults:
+            text: null
+            from: null
+            date: null
+
+
+    class ItemList extends Backbone.Collection
+
+        model: ItemModel
+
+
+    itemList = new ItemList
+
+    itemListView = new ItemListView
+        model: itemList
+
     landing = new Landing
     landing.checkHash()
 
+
+    service
+        .on 'sio:chat', ($data) ->
+            itemList.add new ItemModel
+                text: $data.text
+                from: $data.from
+                date: $data.date
+
+        .on 'sio:room-io', ->
+            console.log arguments
 

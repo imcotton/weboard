@@ -30,8 +30,10 @@ exports.init = ($http) ->
                 $fn false
 
         $socket.on 'chat', ($msg) ->
-            console.log "chat: #{$msg}"
-            this.broadcast.to(@room).emit 'chat', @id, $msg
+            this.broadcast.to(@room).emit 'chat',
+                from: @id
+                text: $msg
+                date: new Date
 
         $socket.once 'disconnect', ->
             if @room of rooms
