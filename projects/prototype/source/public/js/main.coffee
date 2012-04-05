@@ -7,6 +7,9 @@ $ ->
 
         el: $ '#main .landing'
 
+        initialize: ->
+            @service = @options.service
+
         checkHash: ->
             if hash = window.location.hash?[1..]
                 @$el.find('.default > button.guest').click()
@@ -55,7 +58,7 @@ $ ->
 
             a = $($event.target).attr 'disabled', 'disabled'
 
-            service.guest(room)
+            @service.guest(room)
                 .done(@onLogin)
                 .fail =>
                     a.removeAttr 'disabled'
@@ -75,13 +78,14 @@ $ ->
 
         text: -> @textarea.val()
 
-
         initialize: ->
             @setElement $ Tmpl.typing_bar()
             @service = @options.service
 
             @textarea = @$el.find('textarea.text')
 
+        render: =>
+            @$el.appendTo 'body'
 
         onSend: ->
             return if !@text()
@@ -96,9 +100,8 @@ $ ->
             @textarea.val ''
             @textarea.select()
 
-
         onKeydown: ($event) ->
-            if $event.which is 13 
+            if (_.indexOf [10, 13], $event.which) isnt -1
                 if $event.ctrlKey
                     @textarea.val @text() + '\n'
                 else
@@ -106,7 +109,6 @@ $ ->
                     return false
             else
                 return true
-
 
         events:
             'click button.send': 'onSend'
@@ -122,7 +124,6 @@ $ ->
 
         onAdded: ($item) =>
             $("<p>#{$item.get('text')}</p>").appendTo @$el
-
 
 
     class ItemModel extends Backbone.Model
@@ -148,9 +149,9 @@ $ ->
         model: itemList
 
     landing = new Landing
+        service: service
+    landing.on 'onLogin', typing.render
     landing.checkHash()
-    landing.on 'onLogin', ->
-        typing.$el.appendTo 'body'
 
 
     service
