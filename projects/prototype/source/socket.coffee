@@ -11,8 +11,6 @@ exports.init = ($http) ->
 
     io.sockets.on 'connection', ($socket) ->
 
-        $socket.emit 'chat', 'hello'
-        
         $socket.once 'host', ($fn) ->
             @room = "#{roomPefix}#{@id}"
             rooms[@room] = true

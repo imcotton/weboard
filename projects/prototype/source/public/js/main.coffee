@@ -25,11 +25,11 @@ $ ->
 
             $('<img>', src: utils.getQRCodeImg(url)).one 'load', ->
                 info.find('.qrimg img').replaceWith @
-                $('body').css 'padding-top', info.height() + 20;
+                $('body').css 'padding-top', $('.info-bar').height()
+                $('body').css 'padding-bottom', $('.typing-bar').height()
 
             @$el.remove()
-
-            new Typing().$el.appendTo 'body'
+            @trigger 'onLogin'
 
         clickHost: ->
             @$el.find('.default > button').attr 'disabled', 'disabled'
@@ -73,8 +73,44 @@ $ ->
 
     class Typing extends Backbone.View
 
+        text: -> @textarea.val()
+
+
         initialize: ->
             @setElement $ Tmpl.typing_bar()
+            @service = @options.service
+
+            @textarea = @$el.find('textarea.text')
+
+
+        onSend: ->
+            return if !@text
+
+            @model.add
+                text: "[me] #{@text}"
+                from: service.sid
+                date: new Date
+
+            service.chat @text
+
+            @textarea.val ''
+            @textarea.select()
+
+
+        onKeydown: ($event) ->
+            if $event.which is 13 
+                if $event.ctrlKey
+                    @textarea.val @text + '\n'
+                else
+                    @onSend()
+                    return false
+            else
+                return true
+
+
+        events:
+            'click button.send': 'onSend'
+            'keydown textarea.text': 'onKeydown'
 
 
     class ItemListView extends Backbone.View
@@ -85,7 +121,7 @@ $ ->
             @model.on 'add', @onAdded
 
         onAdded: ($item) =>
-            $("<div>#{$item.get('text')}</div>").appendTo @$el
+            $("<p>#{$item.get('text')}</p>").appendTo @$el
 
 
 
@@ -104,11 +140,17 @@ $ ->
 
     itemList = new ItemList
 
+    typing = new Typing
+        model: itemList
+        service: service
+
     itemListView = new ItemListView
         model: itemList
 
     landing = new Landing
     landing.checkHash()
+    landing.on 'onLogin', ->
+        typing.$el.appendTo 'body'
 
 
     service
@@ -119,5 +161,5 @@ $ ->
                 date: $data.date
 
         .on 'sio:room-io', ->
-            console.log arguments
+            #console.log arguments
 

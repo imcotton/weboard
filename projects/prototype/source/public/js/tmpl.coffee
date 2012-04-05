@@ -27,7 +27,7 @@ window.Tmpl = class
 
                 <div class="form form-horizontal">
                     <textarea class="text input-xlarge" rows="2"></textarea>
-                    <button class="join btn btn-primary">Send</button>
+                    <button class="send btn btn-primary">Send</button>
                 </div>
 
             </div>
