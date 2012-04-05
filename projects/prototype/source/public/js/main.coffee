@@ -84,14 +84,14 @@ $ ->
 
 
         onSend: ->
-            return if !@text
+            return if !@text()
 
             @model.add
-                text: "[me] #{@text}"
+                text: "[me] #{@text()}"
                 from: service.sid
                 date: new Date
 
-            service.chat @text
+            service.chat @text()
 
             @textarea.val ''
             @textarea.select()
@@ -100,7 +100,7 @@ $ ->
         onKeydown: ($event) ->
             if $event.which is 13 
                 if $event.ctrlKey
-                    @textarea.val @text + '\n'
+                    @textarea.val @text() + '\n'
                 else
                     @onSend()
                     return false
