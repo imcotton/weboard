@@ -86,6 +86,7 @@ $ ->
 
         render: =>
             @$el.appendTo 'body'
+            @textarea.select()
 
         onSend: ->
             return if !@text()
