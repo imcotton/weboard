@@ -28,8 +28,8 @@ $ ->
 
             $('<img>', src: utils.getQRCodeImg(url)).one 'load', ->
                 info.find('.qrimg img').replaceWith @
-                $('body').css 'padding-top', $('.info-bar').height()
-                $('body').css 'padding-bottom', $('.typing-bar').height()
+                $('body').css 'padding-top', $('.info-bar').height() + 3
+                $('body').css 'padding-bottom', $('.typing-bar').height() + 2
 
             @$el.remove()
             @trigger 'onLogin'
@@ -91,7 +91,7 @@ $ ->
             return if !@text()
 
             @model.add
-                text: "[me] #{@text()}"
+                text: @text()
                 from: service.sid
                 date: new Date
 
@@ -118,7 +118,8 @@ $ ->
             @model.on 'add', @onAdded
 
         onAdded: ($item) =>
-            $("<p>#{$item.get('text')}</p>").appendTo @$el
+            $("<pre>#{$item.get('text')}</pre>").appendTo @$el
+            $('html,body').animate scrollTop: @$el.height()
 
 
     class ItemModel extends Backbone.Model
