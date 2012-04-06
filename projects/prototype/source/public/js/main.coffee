@@ -101,14 +101,9 @@ $ ->
             @textarea.select()
 
         onKeydown: ($event) ->
-            if (_.indexOf [10, 13], $event.which) isnt -1
-                if $event.ctrlKey
-                    @textarea.val @text() + '\n'
-                else
-                    @onSend()
-                    return false
-            else
-                return true
+            if (_.indexOf [10, 13], $event.which) isnt -1 and !$event.shiftKey
+                $event.preventDefault()
+                @onSend()
 
         events:
             'click button.send': 'onSend'
