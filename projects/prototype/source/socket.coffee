@@ -6,22 +6,24 @@ exports.init = ($http) ->
 
     io.set 'log level', 2
 
-    rooms = {}
+    house = {}
     roomPefix = 'room-'
 
     io.sockets.on 'connection', ($socket) ->
 
         $socket.once 'host', ($fn) ->
-            @room = "#{roomPefix}#{@id}"
-            rooms[@room] = true
+            num = "#{@id}"[...5]
+            @room = "#{roomPefix}#{num}"
+            house[@room] = 1
             this.join @room
-            $fn @id
+            $fn num
 
         $socket.on 'knock', ($room, $fn) ->
             room = "#{roomPefix}#{$room}"
-            if room of rooms
+            if room of house
                 @room = room
                 this.join @room
+                house[@room]++
                 this.broadcast.to(@room).emit 'room-io', true, @id
                 $fn $room
             else
@@ -34,8 +36,13 @@ exports.init = ($http) ->
                 date: new Date
 
         $socket.once 'disconnect', ->
-            if @room of rooms
-                this.leave @room
-                this.broadcast.to(@room).emit 'room-io', false, @id
+            return unless @room of house
+
+            this.leave @room
+            house[@room]--
+            this.broadcast.to(@room).emit 'room-io', false, @id
+
+            delete house[@room] unless house[@room]
+
 
 
