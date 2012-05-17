@@ -31,7 +31,7 @@ app.get '/', (req, res) ->
     res.sendfile "#{__dirname}/views/index.html"
 
 
-app.listen 3000
+app.listen process.env.PORT or 3000
 
 console.log "Express server listening on port %d in %s mode",
     app.address().port
