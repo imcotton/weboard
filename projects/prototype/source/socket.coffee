@@ -23,10 +23,6 @@ exports.init = ($http) ->
 
         io.set 'log level', 2
 
-        io.set 'transports', [
-            'websocket'
-        ]
-
 
     house = {}
     roomPefix = 'room-'
