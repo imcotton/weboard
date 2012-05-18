@@ -4,7 +4,29 @@ exports.init = ($http) ->
 
     io = io.listen $http
 
-    io.set 'log level', 2
+    io.configure 'production', ->
+
+        io.set 'log level', 1
+
+        io.enable 'browser client minification'
+        io.enable 'browser client etag'
+        io.enable 'browser client gzip'
+
+        io.set 'transports', [
+            'websocket'
+            'xhr-polling'
+            'jsonp-polling'
+            'htmlfile'
+        ]
+
+    io.configure 'development', ->
+
+        io.set 'log level', 2
+
+        io.set 'transports', [
+            'websocket'
+        ]
+
 
     house = {}
     roomPefix = 'room-'
