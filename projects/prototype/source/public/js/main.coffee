@@ -119,7 +119,7 @@ $ ->
             @model.on 'add', @onAdded
 
         onAdded: ($item) =>
-            $("<pre>#{$item.get('text')}</pre>").appendTo @$el
+            $('<pre/>').text($item.get('text')).appendTo @$el
             $('html,body').animate scrollTop: @$el.height()
 
 
