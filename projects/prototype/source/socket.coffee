@@ -1,6 +1,6 @@
 io = require 'socket.io'
 
-exports.init = ($http) ->
+@init = ($http) ->
 
     io = io.listen $http
 
@@ -33,22 +33,22 @@ exports.init = ($http) ->
             num = "#{@id}"[...5]
             @room = "#{roomPefix}#{num}"
             house[@room] = 1
-            this.join @room
+            @join @room
             $fn num
 
         $socket.on 'knock', ($room, $fn) ->
             room = "#{roomPefix}#{$room}"
             if room of house
                 @room = room
-                this.join @room
+                @join @room
                 house[@room]++
-                this.broadcast.to(@room).emit 'room-io', true, @id
+                @broadcast.to(@room).emit 'room-io', true, @id
                 $fn $room
             else
                 $fn false
 
         $socket.on 'chat', ($msg) ->
-            this.broadcast.to(@room).emit 'chat',
+            @broadcast.to(@room).emit 'chat',
                 from: @id
                 text: $msg
                 date: new Date
@@ -56,9 +56,9 @@ exports.init = ($http) ->
         $socket.once 'disconnect', ->
             return unless @room of house
 
-            this.leave @room
+            @leave @room
             house[@room]--
-            this.broadcast.to(@room).emit 'room-io', false, @id
+            @broadcast.to(@room).emit 'room-io', false, @id
 
             delete house[@room] unless house[@room]
 

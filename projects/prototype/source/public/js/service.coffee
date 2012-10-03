@@ -1,5 +1,5 @@
 
-class Service
+@Service = class
 
     constructor: ->
         _.extend @, Backbone.Events
@@ -53,9 +53,3 @@ class Service
                 @trigger 'sio:room-io', arguments...
 
         defer.promise()
-
-
-
-
-
-window.Service = Service
