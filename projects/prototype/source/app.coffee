@@ -3,10 +3,9 @@ socket = require './socket'
 
 express.static.mime.load './mime.types'
 
-
-app = module.exports = express.createServer();
-
-socket.init app
+app = module.exports = express()
+server = require('http').createServer app
+socket.init server
 
 # Configuration
 
@@ -31,8 +30,8 @@ app.get '/', (req, res) ->
     res.sendfile "#{__dirname}/views/index.html"
 
 
-app.listen process.env.PORT or 3000
+server.listen process.env.PORT or 3000
 
 console.log "Express server listening on port %d in %s mode",
-    app.address().port
+    server.address().port
     app.settings.env
