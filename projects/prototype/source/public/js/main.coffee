@@ -119,7 +119,16 @@ $ ->
             @model.on 'add', @onAdded
 
         onAdded: ($item) =>
-            $('<pre/>').text($item.get('text')).appendTo @$el
+            pre = $('<pre/>').text($item.get('text')).appendTo @$el
+
+            urls = pre.text().match /(https?:\/\/[^\s]+)/g
+
+            if urls?.length
+                ol = $('<ol>')
+                for i in urls
+                    ol.append $('<li>').append "<a href='#{i}' target='_blank'>#{i}</a>"
+                ol.appendTo @$el
+
             $('html,body').animate scrollTop: @$el.height()
 
 
