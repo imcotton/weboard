@@ -3,6 +3,7 @@
 source=../source
 output=./output
 
+rm -rf $output
 mkdir -p $output
 cp -r $source/* $output/
 
