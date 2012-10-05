@@ -12,6 +12,7 @@ socket.init server
 app.configure ->
     app.use express.bodyParser()
     app.use express.methodOverride()
+    app.use express.compress()
     app.use app.router
     app.use express.static "#{__dirname}/public"
 
