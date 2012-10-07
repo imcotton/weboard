@@ -24,7 +24,7 @@ io = require 'socket.io'
         io.set 'log level', 2
 
 
-    try require('./sio.config')?.init(io)
+    try require('./sio.config')?.init io
     
 
     house = {}
