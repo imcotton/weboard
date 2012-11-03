@@ -92,6 +92,7 @@ $ ->
             return if !@text()
 
             @model.add
+                self: true
                 text: @text()
                 from: service.sid
                 date: new Date
@@ -120,6 +121,7 @@ $ ->
 
         onAdded: ($item) =>
             pre = $('<pre/>').text($item.get('text')).appendTo @$el
+            pre.addClass 'self' if $item.get 'self'
 
             urls = pre.text().match /(https?:\/\/[^\s]+)/g
 
@@ -135,6 +137,7 @@ $ ->
     class ItemModel extends Backbone.Model
 
         defaults:
+            self: false
             text: null
             from: null
             date: null
