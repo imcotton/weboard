@@ -1,0 +1,29 @@
+<div id="entry" class="container well">
+
+    <button ng-click="entry.host()"
+            class="btn btn-large btn-primary"
+    >Host</button>
+
+    <button ng-hide="join"
+            ng-click="join = true"
+            class="btn btn-large btn-info"
+    >Guest</button>
+
+    <span ng-show="join"
+          ng-class="{error: sorry}"
+          class="passcode input-append control-group"
+    >
+
+        <input ng-model="passcode"
+               type="text"
+               class="input-small"
+        />
+
+        <button ng-disabled="!passcode"
+                ng-click="entry.guest(passcode)"
+                class="btn btn-large btn-info"
+        >Join</button>
+
+    </span>
+
+</div>
