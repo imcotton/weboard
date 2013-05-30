@@ -1,0 +1,43 @@
+<div id="room" class="container">
+
+    <ul auto-scroll="room.list.length to typing" class="board">
+
+        <li ng-repeat="item in room.list">
+            <pre ng-class="{'alert alert-info': item.self}">{{item.text}}</pre>
+
+            <ol ng-if="item.urls.length">
+                <li ng-repeat="url in item.urls track by $index">
+                    <a ng-href="{{url}}" target="_blank">{{url}}</a>
+                </li>
+            </ol>
+        </li>
+
+    </ul>
+
+    <div class="gap"></div>
+
+    <div id="typing" class="navbar navbar-fixed-bottom navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+
+                <a ng-href="{{room.roomURL}}" target="_blank">
+                    <img ng-src="http://www.esponce.com/api/v3/generate?size=2&padding=1&content={{room.roomURL}}"
+                         class="qrcode hidden-phone"/>
+                </a>
+
+                <textarea ng-model="input"
+                          ng-keydown="room.onTyping($event)"
+                          class="text input-large"
+                ></textarea>
+
+                <button ng-click="room.send(input); input=''"
+                        ng-disabled="!input"
+                        class="send btn btn-primary"
+                >Send</button>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
