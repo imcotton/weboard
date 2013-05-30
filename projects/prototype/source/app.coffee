@@ -27,8 +27,9 @@ app.configure 'production', ->
 
 # Routes
 
-app.get '/', (req, res) ->
-    res.sendfile "#{__dirname}/views/index.html"
+for path in ['/', '/room/*']
+    app.get path, (req, res) ->
+        res.sendfile "#{__dirname}/public/index.html"
 
 
 server.listen process.env.PORT or 3000
